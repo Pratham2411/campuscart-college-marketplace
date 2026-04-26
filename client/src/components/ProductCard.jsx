@@ -9,14 +9,18 @@ export default function ProductCard({
   wishlisted = false,
   onToggleWishlist = null
 }) {
+  const productHref = `/products/${product._id}`;
+
   return (
     <article className="surface-card group overflow-hidden">
       <div className="relative">
-        <img
-          alt={product.title}
-          className="h-56 w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-          src={getImageSrc(product.images?.[0])}
-        />
+        <Link className="block overflow-hidden" to={productHref}>
+          <img
+            alt={product.title}
+            className="h-56 w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+            src={getImageSrc(product.images?.[0])}
+          />
+        </Link>
         <div className="absolute left-4 top-4 flex gap-2">
           <span className="pill">{product.category}</span>
           <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-700">
@@ -34,11 +38,15 @@ export default function ProductCard({
         <div className="flex items-start justify-between gap-3">
           <div>
             <h3 className="text-xl font-bold text-ink">
-              <Link to={`/products/${product._id}`}>{product.title}</Link>
+              <Link className="hover:text-accent" to={productHref}>
+                {product.title}
+              </Link>
             </h3>
-            <p className="mt-2 line-clamp-2 text-sm text-slate-500">
-              {product.description}
-            </p>
+            <Link className="mt-2 block" to={productHref}>
+              <p className="line-clamp-2 text-sm text-slate-500">
+                {product.description}
+              </p>
+            </Link>
           </div>
           <p className="text-xl font-extrabold text-ink">{formatCurrency(product.price)}</p>
         </div>
@@ -61,9 +69,14 @@ export default function ProductCard({
               {product.reviewCount || 0} review{product.reviewCount === 1 ? "" : "s"}
             </span>
           </div>
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <Tag size={14} />
-            {(product.tags || []).slice(0, 2).join(" • ") || "Campus-ready"}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <Tag size={14} />
+              {(product.tags || []).slice(0, 2).join(" | ") || "Campus-ready"}
+            </div>
+            <Link className="text-sm font-semibold text-accent hover:text-orange-600" to={productHref}>
+              View details
+            </Link>
           </div>
         </div>
       </div>

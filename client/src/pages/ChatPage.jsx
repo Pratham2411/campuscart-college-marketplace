@@ -1,6 +1,6 @@
 import { SendHorizonal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import api from "../api/axios.js";
 import Alert from "../components/ui/Alert.jsx";
 import EmptyState from "../components/ui/EmptyState.jsx";
@@ -215,6 +215,7 @@ export default function ChatPage() {
             })
           ) : (
             <EmptyState
+              action={<Link className="btn-secondary" to="/marketplace">Browse Listings</Link>}
               description="Start from any listing and tap Message Seller to open your first conversation."
               title="No conversations yet"
             />
@@ -235,8 +236,7 @@ export default function ChatPage() {
                 <div>
                   <h2 className="text-xl font-bold text-ink">{selectedThread.product?.title}</h2>
                   <p className="text-sm text-slate-500">
-                    {selectedThread.otherUser?.name || "Conversation partner"} •{" "}
-                    {formatCurrency(selectedThread.product?.price)}
+                    {selectedThread.otherUser?.name || "Conversation partner"} | {formatCurrency(selectedThread.product?.price)}
                   </p>
                 </div>
               </div>
@@ -298,6 +298,7 @@ export default function ChatPage() {
           </>
         ) : (
           <EmptyState
+            action={<Link className="btn-secondary" to="/marketplace">Browse Listings</Link>}
             description="Choose a conversation from the left, or message a seller from a product detail page."
             title="Select a conversation"
           />
