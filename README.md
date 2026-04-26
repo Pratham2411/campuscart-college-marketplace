@@ -2,6 +2,13 @@
 
 CampusCart is a full-stack marketplace built for college communities. Students can create listings, browse items, save wishlists, chat with sellers, leave reviews, report abuse, and moderate content through an admin dashboard.
 
+## Live Project
+
+- Live frontend: [campuscart-college-marketplace.vercel.app](https://campuscart-college-marketplace.vercel.app)
+- Live backend health: [campuscart-backend-jiie.onrender.com/api/health](https://campuscart-backend-jiie.onrender.com/api/health)
+- GitHub repository: [Pratham2411/campuscart-college-marketplace](https://github.com/Pratham2411/campuscart-college-marketplace)
+- API documentation: [docs/API.md](https://github.com/Pratham2411/campuscart-college-marketplace/blob/main/docs/API.md)
+
 ## Tech Stack
 
 - Frontend: React, React Router, Tailwind CSS, Axios
@@ -15,36 +22,36 @@ CampusCart is a full-stack marketplace built for college communities. Students c
 
 ```text
 college-marketplace/
-├── client/
-│   ├── src/
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   └── utils/
-│   ├── index.html
-│   ├── package.json
-│   ├── postcss.config.js
-│   ├── tailwind.config.js
-│   └── vite.config.js
-├── server/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   └── validators/
-│   ├── .env.example
-│   └── package.json
-├── docs/
-│   ├── API.md
-│   └── screenshots/
-├── package.json
-└── README.md
+|-- client/
+|   |-- src/
+|   |   |-- api/
+|   |   |-- components/
+|   |   |-- context/
+|   |   |-- hooks/
+|   |   |-- pages/
+|   |   `-- utils/
+|   |-- index.html
+|   |-- package.json
+|   |-- postcss.config.js
+|   |-- tailwind.config.js
+|   `-- vite.config.js
+|-- server/
+|   |-- src/
+|   |   |-- config/
+|   |   |-- controllers/
+|   |   |-- middleware/
+|   |   |-- models/
+|   |   |-- routes/
+|   |   |-- services/
+|   |   |-- utils/
+|   |   `-- validators/
+|   |-- .env.example
+|   `-- package.json
+|-- docs/
+|   |-- API.md
+|   `-- screenshots/
+|-- package.json
+`-- README.md
 ```
 
 ## Features
@@ -71,7 +78,7 @@ college-marketplace/
 - Wishlist management
 - Loading, error, and empty states
 
-### Trust & Engagement
+### Trust and Engagement
 
 - Ratings and reviews
 - Buyer-seller chat threads
@@ -82,7 +89,7 @@ college-marketplace/
 
 ### Server
 
-Copy [server/.env.example](/C:/Users/prath/OneDrive/Desktop/Marketplace/server/.env.example) to `server/.env`.
+Copy [`server/.env.example`](https://github.com/Pratham2411/campuscart-college-marketplace/blob/main/server/.env.example) to `server/.env`.
 
 ```env
 PORT=5000
@@ -106,7 +113,7 @@ Notes:
 
 ### Client
 
-Copy [client/.env.example](/C:/Users/prath/OneDrive/Desktop/Marketplace/client/.env.example) to `client/.env`.
+Copy [`client/.env.example`](https://github.com/Pratham2411/campuscart-college-marketplace/blob/main/client/.env.example) to `client/.env`.
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000/api
@@ -143,24 +150,49 @@ Default local URLs:
 - Backend API: `http://localhost:5000/api`
 - Health check: `http://localhost:5000/api/health`
 
-## Production Build
+## Production Deployment
 
-Build the frontend bundle:
+### Frontend on Vercel
 
-```powershell
-npm run build --prefix client
+- Live frontend: [https://campuscart-college-marketplace.vercel.app](https://campuscart-college-marketplace.vercel.app)
+- Root directory: `client`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Environment variable:
+
+```env
+VITE_API_BASE_URL=https://campuscart-backend-jiie.onrender.com/api
 ```
 
-Backend verification:
+### Backend on Render
 
-```powershell
-Get-ChildItem .\server\src -Recurse -Filter *.js | ForEach-Object { node --check $_.FullName }
+- Live backend: [https://campuscart-backend-jiie.onrender.com](https://campuscart-backend-jiie.onrender.com)
+- Root directory: `server`
+- Build command: `npm install`
+- Start command: `npm start`
+- Important environment variables:
+
+```env
+NODE_ENV=production
+MONGO_URI=your_mongodb_atlas_uri
+JWT_SECRET=your_jwt_secret
+FRONTEND_URL=https://campuscart-college-marketplace.vercel.app
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+ADMIN_EMAILS=admin1@example.com,admin2@example.com
 ```
+
+### Database on MongoDB Atlas
+
+- Create a cluster
+- Add your Render IP or `0.0.0.0/0` during testing
+- Copy the connection string into `MONGO_URI`
 
 ## How To Test Key Flows
 
 1. Sign up two users: one seller and one buyer.
-2. If you want admin access, sign up with the email listed in `ADMIN_EMAILS`.
+2. If you want admin access, sign up with an email listed in `ADMIN_EMAILS`.
 3. Create listings from the seller account.
 4. Browse and filter listings from the marketplace page.
 5. Save items to the wishlist.
@@ -169,36 +201,26 @@ Get-ChildItem .\server\src -Recurse -Filter *.js | ForEach-Object { node --check
 8. Report a listing from a second account.
 9. Log in as admin and moderate the report or remove a listing.
 
-## Deployment Notes
-
-### Frontend on Vercel
-
-- Set `VITE_API_BASE_URL` to your deployed backend URL plus `/api`
-- Build command: `npm run build`
-- Output directory: `dist`
-
-### Backend on Render
-
-- Root directory: `server`
-- Build command: `npm install`
-- Start command: `npm start`
-- Set `MONGO_URI`, `JWT_SECRET`, `FRONTEND_URL`, and Cloudinary variables in Render
-
-### Database on MongoDB Atlas
-
-- Create a cluster
-- Add your Render IP or `0.0.0.0/0` during testing
-- Copy the connection string into `MONGO_URI`
-
-## API Documentation
-
-See [docs/API.md](/C:/Users/prath/OneDrive/Desktop/Marketplace/docs/API.md) for endpoint-level documentation and payload guidance.
-
 ## Screenshots
 
-Screenshots are stored in `docs/screenshots/`:
+### Home
 
-- [Home](/C:/Users/prath/OneDrive/Desktop/Marketplace/docs/screenshots/home.png)
-- [Marketplace](/C:/Users/prath/OneDrive/Desktop/Marketplace/docs/screenshots/marketplace.png)
-- [Product Detail](/C:/Users/prath/OneDrive/Desktop/Marketplace/docs/screenshots/product-detail.png)
-- [Login](/C:/Users/prath/OneDrive/Desktop/Marketplace/docs/screenshots/login.png)
+![Home](https://raw.githubusercontent.com/Pratham2411/campuscart-college-marketplace/main/docs/screenshots/home.png)
+
+### Marketplace
+
+![Marketplace](https://raw.githubusercontent.com/Pratham2411/campuscart-college-marketplace/main/docs/screenshots/marketplace.png)
+
+### Product Detail
+
+![Product Detail](https://raw.githubusercontent.com/Pratham2411/campuscart-college-marketplace/main/docs/screenshots/product-detail.png)
+
+### Login
+
+![Login](https://raw.githubusercontent.com/Pratham2411/campuscart-college-marketplace/main/docs/screenshots/login.png)
+
+## Additional Docs
+
+- API documentation: [docs/API.md](https://github.com/Pratham2411/campuscart-college-marketplace/blob/main/docs/API.md)
+- Frontend source: [client/src](https://github.com/Pratham2411/campuscart-college-marketplace/tree/main/client/src)
+- Backend source: [server/src](https://github.com/Pratham2411/campuscart-college-marketplace/tree/main/server/src)
