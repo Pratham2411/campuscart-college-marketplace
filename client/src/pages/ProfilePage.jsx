@@ -1,13 +1,21 @@
-import { Camera, PencilLine } from "lucide-react";
+import {
+  Camera,
+  Eye,
+  Pencil,
+  PencilLine,
+  PlusCircle,
+  RotateCcw,
+  Trash2
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axios.js";
-import ProductCard from "../components/ProductCard.jsx";
 import Alert from "../components/ui/Alert.jsx";
 import EmptyState from "../components/ui/EmptyState.jsx";
 import Loader from "../components/ui/Loader.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import {
+  formatCurrency,
   getApiErrorMessage,
   getImageSrc,
   getInitials
@@ -29,6 +37,8 @@ export default function ProfilePage() {
     bio: ""
   });
   const [avatarFile, setAvatarFile] = useState(null);
+  const activeListings = listings.filter((listing) => listing.status === "active");
+  const soldListings = listings.filter((listing) => listing.status === "sold");
 
   const loadProfile = async () => {
     setLoading(true);
@@ -89,6 +99,37 @@ export default function ProfilePage() {
       setError(getApiErrorMessage(saveError, "Unable to save profile."));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDeleteListing = async (listingId) => {
+    if (!window.confirm("Delete this listing permanently?")) {
+      return;
+    }
+
+    setError("");
+
+    try {
+      await api.delete(`/products/${listingId}`);
+      setListings((current) => current.filter((listing) => listing._id !== listingId));
+    } catch (deleteError) {
+      setError(getApiErrorMessage(deleteError, "Unable to delete listing."));
+    }
+  };
+
+  const handleToggleStatus = async (listing) => {
+    const nextStatus = listing.status === "sold" ? "active" : "sold";
+    setError("");
+
+    try {
+      const { data } = await api.patch(`/products/${listing._id}/status`, {
+        status: nextStatus
+      });
+      setListings((current) =>
+        current.map((item) => (item._id === listing._id ? data.product : item))
+      );
+    } catch (statusError) {
+      setError(getApiErrorMessage(statusError, "Unable to update listing status."));
     }
   };
 
@@ -242,21 +283,106 @@ export default function ProfilePage() {
       </section>
 
       <section className="space-y-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="pill">Your Listings</p>
             <h2 className="mt-3 text-3xl font-bold text-ink">Manage what you have posted</h2>
           </div>
           <Link className="btn-primary" to="/create-listing">
+            <PlusCircle className="mr-2" size={16} />
             Create Listing
           </Link>
         </div>
 
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[
+            { label: "Total", value: listings.length },
+            { label: "Active", value: activeListings.length },
+            { label: "Sold", value: soldListings.length }
+          ].map((item) => (
+            <div className="surface-card px-5 py-4 text-center" key={item.label}>
+              <p className="text-3xl font-extrabold text-accent">{item.value}</p>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+                {item.label}
+              </p>
+            </div>
+          ))}
+        </div>
+
         {listings.length ? (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {listings.map((listing) => (
-              <ProductCard key={listing._id} product={listing} />
-            ))}
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {listings.map((listing) => {
+              const isSold = listing.status === "sold";
+
+              return (
+                <article className="surface-card overflow-hidden" key={listing._id}>
+                  <Link className="block overflow-hidden" to={`/products/${listing._id}`}>
+                    <img
+                      alt={listing.title}
+                      className="h-48 w-full object-cover transition duration-500 hover:scale-[1.03]"
+                      src={getImageSrc(listing.images?.[0])}
+                    />
+                  </Link>
+
+                  <div className="space-y-4 p-5">
+                    <div className="flex flex-wrap gap-2">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                          isSold
+                            ? "bg-red-500/15 text-red-200"
+                            : "bg-emerald-500/15 text-emerald-200"
+                        }`}
+                      >
+                        {isSold ? "Sold" : "Active"}
+                      </span>
+                      <span className="pill">{listing.category}</span>
+                    </div>
+
+                    <div>
+                      <h3 className="truncate text-lg font-bold text-ink" title={listing.title}>
+                        {listing.title}
+                      </h3>
+                      <p className="mt-1 text-xl font-extrabold text-accent">
+                        {formatCurrency(listing.price)}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-2">
+                      <Link
+                        aria-label={`View ${listing.title}`}
+                        className="btn-secondary px-3 py-2"
+                        to={`/products/${listing._id}`}
+                      >
+                        <Eye size={16} />
+                      </Link>
+                      <Link
+                        aria-label={`Edit ${listing.title}`}
+                        className="btn-secondary px-3 py-2"
+                        to={`/products/${listing._id}/edit`}
+                      >
+                        <Pencil size={16} />
+                      </Link>
+                      <button
+                        aria-label={isSold ? "Mark active" : "Mark sold"}
+                        className="btn-secondary px-3 py-2"
+                        onClick={() => handleToggleStatus(listing)}
+                        type="button"
+                      >
+                        <RotateCcw size={16} />
+                      </button>
+                      <button
+                        aria-label={`Delete ${listing.title}`}
+                        className="btn-secondary px-3 py-2 text-red-200 hover:text-red-100"
+                        onClick={() => handleDeleteListing(listing._id)}
+                        type="button"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         ) : (
           <EmptyState

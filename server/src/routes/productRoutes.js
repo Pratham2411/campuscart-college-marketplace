@@ -4,7 +4,8 @@ import {
   deleteProduct,
   getProductById,
   getProducts,
-  updateProduct
+  updateProduct,
+  updateProductStatus
 } from "../controllers/productController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { upload } from "../middleware/uploadMiddleware.js";
@@ -31,6 +32,7 @@ router.patch(
   validateRequest,
   updateProduct
 );
+router.patch("/:productId/status", protect, updateProductStatus);
 router.delete("/:productId", protect, deleteProduct);
 
 export default router;

@@ -2,6 +2,7 @@ import express from "express";
 import {
   getConversations,
   getThread,
+  getUnreadCount,
   markThreadAsRead,
   sendMessage
 } from "../controllers/chatController.js";
@@ -12,6 +13,7 @@ import { messageValidator } from "../validators/messageValidators.js";
 const router = express.Router();
 
 router.use(protect);
+router.get("/unread-count", getUnreadCount);
 router.get("/conversations", getConversations);
 router.get("/thread/:productId/:participantId", getThread);
 router.post(

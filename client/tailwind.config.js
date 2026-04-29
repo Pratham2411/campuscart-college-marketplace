@@ -4,23 +4,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#0F172A",
-        mist: "#F8FAFC",
-        accent: "#F97316",
-        emerald: "#0F766E",
-        dusk: "#3B2F63",
-        peach: "#FFF1E8"
+        ink: "#F1F5F9",
+        mist: "#08090C",
+        accent: "#8B5CF6",
+        emerald: "#10B981",
+        dusk: "#0F1117",
+        peach: "#181421"
       },
       fontFamily: {
         display: ["'Space Grotesk'", "ui-sans-serif", "system-ui"],
         body: ["'Manrope'", "ui-sans-serif", "system-ui"]
       },
       boxShadow: {
-        soft: "0 20px 60px rgba(15, 23, 42, 0.12)"
+        soft: "0 18px 60px rgba(0, 0, 0, 0.45), 0 0 36px rgba(124, 58, 237, 0.12)"
       },
       backgroundImage: {
         "hero-grid":
-          "radial-gradient(circle at top, rgba(249, 115, 22, 0.18), transparent 32%), radial-gradient(circle at 20% 20%, rgba(15, 118, 110, 0.12), transparent 24%), linear-gradient(135deg, #fff7ed 0%, #f8fafc 60%, #eff6ff 100%)"
+          "radial-gradient(ellipse 80% 50% at 20% 0%, rgba(124, 58, 237, 0.12), transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(99, 102, 241, 0.08), transparent 60%), linear-gradient(135deg, #08090c 0%, #0f1117 55%, #111827 100%)"
       }
     }
   },

@@ -70,6 +70,15 @@ export const getConversations = asyncHandler(async (req, res) => {
   res.json({ conversations });
 });
 
+export const getUnreadCount = asyncHandler(async (req, res) => {
+  const count = await Message.countDocuments({
+    receiver: req.user._id,
+    readBy: { $ne: req.user._id }
+  });
+
+  res.json({ count });
+});
+
 export const getThread = asyncHandler(async (req, res) => {
   const { productId, participantId } = req.params;
   const conversationKey = buildConversationKey(

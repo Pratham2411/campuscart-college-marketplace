@@ -247,6 +247,28 @@ export const updateProduct = asyncHandler(async (req, res) => {
   });
 });
 
+export const updateProductStatus = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.productId);
+
+  if (!product) {
+    throw new ApiError(404, "Listing not found.");
+  }
+
+  const isOwner = product.seller.toString() === req.user._id.toString();
+  if (!isOwner && req.user.role !== "admin") {
+    throw new ApiError(403, "You can only update your own listings.");
+  }
+
+  product.status = req.body.status === "sold" ? "sold" : "active";
+  await product.save();
+  await product.populate("seller", sellerProjection);
+
+  res.json({
+    message: `Listing marked as ${product.status}.`,
+    product
+  });
+});
+
 export const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.productId);
 
